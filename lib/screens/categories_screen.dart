@@ -1,4 +1,6 @@
+import 'package:el_toda/models/category.dart';
 import 'package:el_toda/screens/home_screen.dart';
+import 'package:el_toda/services/category_service.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -7,6 +9,14 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  var _categoryName = TextEditingController();
+  var _categoryDescription = TextEditingController();
+
+  var _category = Category();
+  var _categoryService = CategoryService();
+
   _showFormDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -15,11 +25,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           return AlertDialog(
             actions: [
               FlatButton(
-                onPressed: (){},
+                onPressed: (){
+                  //print("Category name : ${_categoryName.text}");
+                  //print("Category description : ${_categoryDescription.text}");
+                  _category.name = _categoryName.text;
+                  _category.description = _categoryDescription.text;
+                  _categoryService.saveCategory(_category);
+                },
                 child: Text("Save"),
               ),//save
               FlatButton(
-                onPressed: (){},
+                onPressed: (){
+
+                },
                 child: Text("Cancel"),
               ),//cancel
             ],
@@ -28,12 +46,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               child: Column(
                 children: [
                   TextField(
+                    controller: _categoryName,
                     decoration: InputDecoration(
                       labelText: 'Category name',
                       hintText: 'Write category name',
                     ),
                   ),
                   TextField(
+                    controller: _categoryDescription,
                     decoration: InputDecoration(
                       labelText: 'Category description',
                       hintText: 'Write category description',
