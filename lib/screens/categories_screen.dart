@@ -9,6 +9,7 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
+
   final _formKey = GlobalKey<FormState>();
 
   var _categoryName = TextEditingController();
@@ -26,18 +27,31 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             actions: [
               FlatButton(
                 onPressed: () async {
+                  _categoryName.clear();
+                  _categoryDescription.clear();
                   //print("Category name : ${_categoryName.text}");
                   //print("Category description : ${_categoryDescription.text}");
+
                   _category.name = _categoryName.text;
+                  _categoryName.clear();
+                  _categoryDescription.clear();
+                  _categoryDescription.clear();
+
                   _category.description = _categoryDescription.text;
+                  _categoryName.clear();
+                  _categoryDescription.clear();
+
                   var result = await _categoryService.saveCategory(_category);
                   print(result);
+                  _categoryName.clear();
+                  _categoryDescription.clear();
+
                 },
                 child: Text("Save"),
               ),//save
               FlatButton(
                 onPressed: (){
-
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => CategoriesScreen()));
                 },
                 child: Text("Cancel"),
               ),//cancel
@@ -53,6 +67,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       hintText: 'Write category name',
                     ),
                   ),
+
                   TextField(
                     controller: _categoryDescription,
                     decoration: InputDecoration(
