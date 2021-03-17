@@ -1,3 +1,4 @@
+import 'package:el_toda/helpers/drawer_navigation.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text("El Todo"),
       ),
+      drawer: DrawerNavigation(),
     );
   }
 }
