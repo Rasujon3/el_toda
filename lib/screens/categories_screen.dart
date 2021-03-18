@@ -112,13 +112,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           },
         ),
       ),
-      body: ListView(
-        scrollDirection: Axis.vertical,
-        children: List.generate(_categoryList.length, (index) {
-          return Column(
-            children: [
-
-            Card(
+      body: ListView.builder(
+          itemCount: _categoryList.length,
+          itemBuilder: (context, index){
+            return Card(
               child: ListTile(
                 leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
                 title: Row(
@@ -131,12 +128,34 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ],
                 ),
               ),
-            ),
+            );
+          }),
 
-            ],
-          );
-        }),
-      ),
+      // ListView(
+      //   scrollDirection: Axis.vertical,
+      //   children: List.generate(_categoryList.length, (index) {
+      //     return Column(
+      //       children: [
+      //
+      //       Card(
+      //         child: ListTile(
+      //           leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
+      //           title: Row(
+      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //             children: [
+      //               Text(
+      //                 _categoryList[index].name,
+      //               ),
+      //               IconButton(icon: Icon(Icons.delete),onPressed: (){},),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //
+      //       ],
+      //     );
+      //   }),
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showFormDialog(context);
