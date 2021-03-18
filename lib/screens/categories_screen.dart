@@ -17,7 +17,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _category = Category();
   var _categoryService = CategoryService();
 
-  List<Widget> _categoryList = List<Widget>();
+  List<Category> _categoryList = List<Category>();
 
   @override
   void initState() {
@@ -28,23 +28,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   getAllCategories() async {
     var categories = await _categoryService.getCategories();
     categories.forEach((category) {
-      //print(category['description']);
-      _categoryList.add(
-        Card(
-          child: ListTile(
-            leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  category['name'],
-                ),
-                IconButton(icon: Icon(Icons.delete),onPressed: (){},),
-              ],
-            ),
-          ),
-        ),
-      );
+      setState(() {
+        var model = Category();
+        model.name = category['name'];
+        _categoryList.add(model);
+        //print(category['description']);
+      });
+
     });
   }
 
@@ -122,8 +112,30 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           },
         ),
       ),
-      body: Column(
-        children: _categoryList,
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        children: List.generate(_categoryList.length, (index) {
+          return Column(
+            children: [
+
+            Card(
+              child: ListTile(
+                leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _categoryList[index].name,
+                    ),
+                    IconButton(icon: Icon(Icons.delete),onPressed: (){},),
+                  ],
+                ),
+              ),
+            ),
+
+            ],
+          );
+        }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
