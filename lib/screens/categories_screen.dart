@@ -9,7 +9,6 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-
   final _formKey = GlobalKey<FormState>();
 
   var _categoryName = TextEditingController();
@@ -18,16 +17,34 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _category = Category();
   var _categoryService = CategoryService();
 
+  List<Widget> _categoryList = List<Widget>();
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     getAllCategories();
   }
 
   getAllCategories() async {
     var categories = await _categoryService.getCategories();
-    categories.forEach((category){
-      print(category['description']);
+    categories.forEach((category) {
+      //print(category['description']);
+      _categoryList.add(
+        Card(
+          child: ListTile(
+            leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  category['name'],
+                ),
+                IconButton(icon: Icon(Icons.delete),onPressed: (){},),
+              ],
+            ),
+          ),
+        ),
+      );
     });
   }
 
@@ -48,15 +65,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
                   var result = await _categoryService.saveCategory(_category);
                   print(result);
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => new CategoriesScreen()));
                 },
                 child: Text("Save"),
-              ),//save
+              ), //save
               FlatButton(
-                onPressed: (){
-                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => CategoriesScreen()));
+                onPressed: () {
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => CategoriesScreen()));
                 },
                 child: Text("Cancel"),
-              ),//cancel
+              ), //cancel
             ],
             title: Text('Category form'),
             content: SingleChildScrollView(
@@ -69,7 +89,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       hintText: 'Write category name',
                     ),
                   ),
-
                   TextField(
                     controller: _categoryDescription,
                     decoration: InputDecoration(
@@ -103,8 +122,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           },
         ),
       ),
-      body: Center(
-        child: Text("Welcome to Category"),
+      body: Column(
+        children: _categoryList,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
