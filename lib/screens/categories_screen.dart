@@ -18,6 +18,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _category = Category();
   var _categoryService = CategoryService();
 
+  @override
+  void initState(){
+    super.initState();
+    getAllCategories();
+  }
+
+  getAllCategories() async {
+    var categories = await _categoryService.getCategories();
+    categories.forEach((category){
+      print(category['description']);
+    });
+  }
+
   _showFormDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -27,25 +40,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             actions: [
               FlatButton(
                 onPressed: () async {
-                  _categoryName.clear();
-                  _categoryDescription.clear();
                   //print("Category name : ${_categoryName.text}");
                   //print("Category description : ${_categoryDescription.text}");
 
                   _category.name = _categoryName.text;
-                  _categoryName.clear();
-                  _categoryDescription.clear();
-                  _categoryDescription.clear();
-
                   _category.description = _categoryDescription.text;
-                  _categoryName.clear();
-                  _categoryDescription.clear();
 
                   var result = await _categoryService.saveCategory(_category);
                   print(result);
-                  _categoryName.clear();
-                  _categoryDescription.clear();
-
                 },
                 child: Text("Save"),
               ),//save

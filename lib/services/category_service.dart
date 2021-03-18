@@ -16,4 +16,7 @@ saveCategory(Category category) async{
 
   //print(category.name);
 }
+  getCategories() async {
+    return await _repository.getAll('categories');
+  }
 }
