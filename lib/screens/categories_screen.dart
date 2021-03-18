@@ -122,7 +122,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   _category.description = _editCategoryDescription.text;
 
                   var result = await _categoryService.updateCategory(_category);
-                  print(result);
+                  //print(result);
                   if(result > 0){
                     //Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>CategoriesScreen()));
                   Navigator.pop(context);
@@ -182,6 +182,41 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
 
+  _deleteCategoryDialog(BuildContext context, categoryId) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            actions: [
+              FlatButton(
+                onPressed: () async {
+                  var result = await _categoryService.deleteCategory(categoryId);
+                  if(result > 0){
+                    //Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>CategoriesScreen()));
+                    Navigator.pop(context);
+                    getAllCategories();
+                    _showSnackBar(Text("Deleted Category Successfully"));
+                  }
+
+                },
+                color: Colors.red,
+                child: Text("Delete",style: TextStyle(color: Colors.white),),
+              ), //update
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(context);
+                },
+                color: Colors.green,
+                child: Text("Cancel",style: TextStyle(color: Colors.white),),
+              ), //cancel
+            ],
+            title: Text('Are you sure to delete this category?'),
+          );
+        });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -216,7 +251,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     Text(
                       _categoryList[index].name,
                     ),
-                    IconButton(icon: Icon(Icons.delete),onPressed: (){},),
+                    IconButton(icon: Icon(Icons.delete),onPressed: (){
+                      _deleteCategoryDialog(context, _categoryList[index].id);
+                    },),
                   ],
                 ),
               ),
