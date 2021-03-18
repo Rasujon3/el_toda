@@ -23,4 +23,8 @@ saveCategory(Category category) async{
   getCategoriesById(categoryId) async{
     return await _repository.getById('categories', categoryId);
   }
+
+  updateCategory(Category category) async{
+    return await _repository.update('categories', category.categoryMap());
+  }
 }

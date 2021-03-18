@@ -22,6 +22,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   var _editCategoryName = TextEditingController();
   var _editCategoryDescription= TextEditingController();
 
+  var category;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   getAllCategories() async {
+    _categoryList = List<Category>();
     var categories = await _categoryService.getCategories();
     categories.forEach((category) {
       setState(() {
@@ -42,6 +45,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     });
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   _showFormDialog(BuildContext context) {
     return showDialog(
@@ -111,19 +116,22 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             actions: [
               FlatButton(
                 onPressed: () async {
-                  //print("Category name : ${_categoryName.text}");
-                  //print("Category description : ${_categoryDescription.text}");
+                  _category.id = category[0]['id'];
 
-                  _category.name = _categoryName.text;
-                  _category.description = _categoryDescription.text;
+                  _category.name = _editCategoryName.text;
+                  _category.description = _editCategoryDescription.text;
 
-                  var result = await _categoryService.saveCategory(_category);
+                  var result = await _categoryService.updateCategory(_category);
                   print(result);
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (context) => new CategoriesScreen()));
+                  if(result > 0){
+                    //Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>CategoriesScreen()));
+                  Navigator.pop(context);
+                    getAllCategories();
+                    _showSnackBar(Text("Updated Successfully"));
+                  }
                 },
-                child: Text("Save"),
-              ), //save
+                child: Text("Update"),
+              ), //update
               FlatButton(
                 onPressed: () {
                   Navigator.of(context).pop(context);
@@ -158,7 +166,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
 
   _editCategory(BuildContext context, categoryId) async {
-    var category = await _categoryService.getCategoriesById(categoryId);
+    category = await _categoryService.getCategoriesById(categoryId);
     setState(() {
       _editCategoryName.text = category[0]['name'] ?? 'No name' ;
       _editCategoryDescription.text = category[0]['description'] ?? 'No description' ;
@@ -166,10 +174,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     _editCategoryDialog(context);
   }
 
+  _showSnackBar(message) {
+    var _snackBar = SnackBar(
+        content: message,
+    );
+    _scaffoldKey.currentState.showSnackBar(_snackBar);
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text("El Todo"),
