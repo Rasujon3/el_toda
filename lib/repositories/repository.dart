@@ -27,4 +27,9 @@ class Repository{
     return await conn.query(table);
   }
 
+  getById(String table,int itemId)  async{
+    var conn = await database;
+    return await conn.query(table,where: 'id=?' , whereArgs: [itemId]);
+  }
+
 }

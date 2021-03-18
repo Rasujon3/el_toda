@@ -19,6 +19,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   List<Category> _categoryList = List<Category>();
 
+  var _editCategoryName = TextEditingController();
+  var _editCategoryDescription= TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +34,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       setState(() {
         var model = Category();
         model.name = category['name'];
+        model.id = category['id'];
+        model.description = category['description'];
         _categoryList.add(model);
         //print(category['description']);
       });
@@ -54,6 +59,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   _category.description = _categoryDescription.text;
 
                   var result = await _categoryService.saveCategory(_category);
+                  if(result > 0){
+                    Navigator.of(context).pop(context);
+                  }
+
                   print(result);
                   Navigator.of(context).push(new MaterialPageRoute(
                       builder: (context) => new CategoriesScreen()));
@@ -62,8 +71,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ), //save
               FlatButton(
                 onPressed: () {
-                  Navigator.of(context).push(new MaterialPageRoute(
-                      builder: (context) => CategoriesScreen()));
+                  Navigator.of(context).pop(context);
                 },
                 child: Text("Cancel"),
               ), //cancel
@@ -93,6 +101,72 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         });
   }
 
+
+  _editCategoryDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            actions: [
+              FlatButton(
+                onPressed: () async {
+                  //print("Category name : ${_categoryName.text}");
+                  //print("Category description : ${_categoryDescription.text}");
+
+                  _category.name = _categoryName.text;
+                  _category.description = _categoryDescription.text;
+
+                  var result = await _categoryService.saveCategory(_category);
+                  print(result);
+                  Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (context) => new CategoriesScreen()));
+                },
+                child: Text("Save"),
+              ), //save
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(context);
+                },
+                child: Text("Cancel"),
+              ), //cancel
+            ],
+            title: Text('Edit Category form'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _editCategoryName,
+                    decoration: InputDecoration(
+                      labelText: 'Category name',
+                      hintText: 'Write category name',
+                    ),
+                  ),
+                  TextField(
+                    controller: _editCategoryDescription,
+                    decoration: InputDecoration(
+                      labelText: 'Category description',
+                      hintText: 'Write category description',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+
+  _editCategory(BuildContext context, categoryId) async {
+    var category = await _categoryService.getCategoriesById(categoryId);
+    setState(() {
+      _editCategoryName.text = category[0]['name'] ?? 'No name' ;
+      _editCategoryDescription.text = category[0]['description'] ?? 'No description' ;
+    });
+    _editCategoryDialog(context);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +191,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           itemBuilder: (context, index){
             return Card(
               child: ListTile(
-                leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
+                leading: IconButton(icon: Icon(Icons.edit),onPressed: (){
+                  _editCategory(context, _categoryList[index].id);
+                },),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -130,32 +206,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
             );
           }),
-
-      // ListView(
-      //   scrollDirection: Axis.vertical,
-      //   children: List.generate(_categoryList.length, (index) {
-      //     return Column(
-      //       children: [
-      //
-      //       Card(
-      //         child: ListTile(
-      //           leading: IconButton(icon: Icon(Icons.edit),onPressed: (){},),
-      //           title: Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //             children: [
-      //               Text(
-      //                 _categoryList[index].name,
-      //               ),
-      //               IconButton(icon: Icon(Icons.delete),onPressed: (){},),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //
-      //       ],
-      //     );
-      //   }),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showFormDialog(context);
