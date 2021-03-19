@@ -1,5 +1,6 @@
 import 'package:el_toda/services/category_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TodoScreen extends StatefulWidget {
   @override
@@ -10,23 +11,43 @@ class _TodoScreenState extends State<TodoScreen> {
   var _todoTitle = TextEditingController();
   var _todoDescription = TextEditingController();
   var _todoDate = TextEditingController();
-  var _categories = List<DropdownMenuItem> ();
+  var _categories = List<DropdownMenuItem>();
   var _selectedValues;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _loadCategories();
   }
 
-  _loadCategories() async{
+  _loadCategories() async {
     var _categoryService = CategoryService();
     var categories = await _categoryService.getCategories();
     categories.forEach((category) {
       setState(() {
-        _categories.add(DropdownMenuItem(child: Text(category["name"]), value: category['name'], ));
+        _categories.add(DropdownMenuItem(
+          child: Text(category["name"]),
+          value: category['name'],
+        ));
       });
     });
+  }
+
+  DateTime _date = DateTime.now();
+
+  _selectTodoDate(BuildContext context) async {
+    var _pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2099),
+    );
+    if (_pickedDate != null) {
+      setState(() {
+        _date = _pickedDate;
+        _todoDate.text = DateFormat('yyyy-MM-dd').format(_pickedDate);
+      });
+    }
   }
 
   @override
@@ -57,21 +78,25 @@ class _TodoScreenState extends State<TodoScreen> {
             decoration: InputDecoration(
               hintText: "YY-MM-DD",
               labelText: "YY-MM-DD",
-              prefixIcon: Icon(Icons.calendar_today),
+              prefixIcon: InkWell(
+                  onTap: () {
+                    _selectTodoDate(context);
+                  },
+                  child: Icon(Icons.calendar_today)),
             ),
           ),
           DropdownButtonFormField(
-              value: _selectedValues,
-              items: _categories,
-              hint: Text("Select one category"),
-              onChanged: (value){
-                _selectedValues = value;
-              },
+            value: _selectedValues,
+            items: _categories,
+            hint: Text("Select one category"),
+            onChanged: (value) {
+              _selectedValues = value;
+            },
           ),
-
-          RaisedButton(onPressed: (){
-
-          },child: Text("Save"),),
+          RaisedButton(
+            onPressed: () {},
+            child: Text("Save"),
+          ),
         ],
       ),
     );
