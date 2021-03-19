@@ -196,7 +196,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     //Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>CategoriesScreen()));
                     Navigator.pop(context);
                     getAllCategories();
-                    _showSnackBar(Text("Deleted Category Successfully"));
+                    _showSnackBar(Text("Category Deleted Successfully"));
                   }
 
                 },

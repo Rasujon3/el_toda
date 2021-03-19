@@ -1,4 +1,5 @@
 import 'package:el_toda/helpers/drawer_navigation.dart';
+import 'package:el_toda/screens/todo_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,6 +15,12 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("El Todo"),
       ),
       drawer: DrawerNavigation(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, new MaterialPageRoute(builder: (context) => TodoScreen()));
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
