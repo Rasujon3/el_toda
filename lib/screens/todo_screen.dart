@@ -1,3 +1,4 @@
+import 'package:el_toda/services/category_service.dart';
 import 'package:flutter/material.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -9,10 +10,24 @@ class _TodoScreenState extends State<TodoScreen> {
   var _todoTitle = TextEditingController();
   var _todoDescription = TextEditingController();
   var _todoDate = TextEditingController();
-
   var _categories = List<DropdownMenuItem> ();
-
   var _selectedValues;
+
+  @override
+  void initState(){
+    super.initState();
+    _loadCategories();
+  }
+
+  _loadCategories() async{
+    var _categoryService = CategoryService();
+    var categories = await _categoryService.getCategories();
+    categories.forEach((category) {
+      setState(() {
+        _categories.add(DropdownMenuItem(child: Text(category["name"]), value: category['name'], ));
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +65,7 @@ class _TodoScreenState extends State<TodoScreen> {
               items: _categories,
               hint: Text("Select one category"),
               onChanged: (value){
-
+                _selectedValues = value;
               },
           ),
 
