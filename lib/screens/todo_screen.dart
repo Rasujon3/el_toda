@@ -1,6 +1,9 @@
+import 'package:el_toda/models/todo.dart';
 import 'package:el_toda/services/category_service.dart';
+import 'package:el_toda/services/todo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:el_toda/services/category_service.dart';
 
 class TodoScreen extends StatefulWidget {
   @override
@@ -13,6 +16,7 @@ class _TodoScreenState extends State<TodoScreen> {
   var _todoDate = TextEditingController();
   var _categories = List<DropdownMenuItem>();
   var _selectedValues;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -48,6 +52,13 @@ class _TodoScreenState extends State<TodoScreen> {
         _todoDate.text = DateFormat('yyyy-MM-dd').format(_pickedDate);
       });
     }
+  }
+
+  _showSnackBar(message) {
+    var _snackBar = SnackBar(
+      content: message,
+    );
+    _scaffoldKey.currentState.showSnackBar(_snackBar);
   }
 
   @override
@@ -94,7 +105,23 @@ class _TodoScreenState extends State<TodoScreen> {
             },
           ),
           RaisedButton(
-            onPressed: () {},
+            onPressed: () async {
+              var todoObj = Todo();
+              todoObj.title = _todoTitle.text;
+              todoObj.description = _todoDescription.text;
+              todoObj.todoDate = _todoDate.text;
+              todoObj.category = _selectedValues.text;
+              todoObj.isFinished = 0;
+
+              var _todoService = TodoService();
+              var result = _todoService.insertTodo(todoObj);
+              print(result);
+
+              if(result > 0){
+                _showSnackBar(Text('Success'));
+              }
+
+            },
             child: Text("Save"),
           ),
         ],
