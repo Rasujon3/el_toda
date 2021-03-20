@@ -12,4 +12,8 @@ class TodoService {
     return await _repository.save('todos', todo.todoMap());
   }
 
+  getTodos() async {
+    return await _repository.getAll('todos');
+  }
+
 }
