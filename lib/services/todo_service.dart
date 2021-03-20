@@ -16,4 +16,8 @@ class TodoService {
     return await _repository.getAll('todos');
   }
 
+  todosByCategory(String category) async {
+    return await _repository.getColumnName('todos', 'category', category);
+  }
+
 }

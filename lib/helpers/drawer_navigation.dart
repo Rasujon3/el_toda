@@ -1,5 +1,6 @@
 import 'package:el_toda/screens/categories_screen.dart';
 import 'package:el_toda/screens/home_screen.dart';
+import 'package:el_toda/screens/todos_by_category.dart';
 import 'package:el_toda/services/category_service.dart';
 import 'package:flutter/material.dart';
 import 'package:el_toda/screens/home_screen.dart';
@@ -10,7 +11,6 @@ class DrawerNavigation extends StatefulWidget {
 }
 
 class _DrawerNavigationState extends State<DrawerNavigation> {
-
   List<Widget> _categoryList = List<Widget>();
   CategoryService _categoryService = CategoryService();
 
@@ -20,11 +20,17 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
     getAllCategories();
   }
 
-  getAllCategories() async{
+  getAllCategories() async {
     var categories = await _categoryService.getCategories();
-    categories.foreach((category){
+    categories.foreach((category) {
       setState(() {
-        _categoryList.add(ListTile(title: Text(category['name']),));
+        _categoryList.add(InkWell(
+          onTap: (){
+            Navigator.push(context, new MaterialPageRoute(builder: (context) =>  TodosByCategory(category: category['name'])));
+          },
+            child: ListTile(
+          title: Text(category['name']),
+        )));
       });
     });
   }
@@ -54,16 +60,17 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
             ListTile(
               title: Text("Home"),
               leading: Icon(Icons.home),
-              onTap: (){
-                Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new HomeScreen()));
+              onTap: () {
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (context) => new HomeScreen()));
               },
             ),
-
             ListTile(
               title: Text("Categories"),
               leading: Icon(Icons.view_list),
-              onTap: (){
-                Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new CategoriesScreen()));
+              onTap: () {
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (context) => new CategoriesScreen()));
               },
             ),
             Divider(),

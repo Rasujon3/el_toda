@@ -42,4 +42,9 @@ class Repository{
     return await conn.rawDelete("DELETE FROM $table WHERE id = $itemId");
   }
 
+  getColumnName(String table, String columnName, String columnValue) async {
+    var conn = await database;
+    return await conn.query(table, where: '$columnName = ?', whereArgs: [columnValue]);
+  }
+
 }
