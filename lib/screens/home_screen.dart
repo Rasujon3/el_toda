@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         model.title = todo['title'];
         model.description = todo['description'];
         model.category = todo['category'];
-        model.todoDate = todo['todoDate'];
+        model.todoDate = todo['category'];
         model.isFinished = todo['isFinished'];
         _todoList.add(model);
       });

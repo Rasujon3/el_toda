@@ -54,12 +54,12 @@ class _TodoScreenState extends State<TodoScreen> {
     }
   }
 
-  _showSnackBar(message) {
-    var _snackBar = SnackBar(
-      content: message,
-    );
-    _scaffoldKey.currentState.showSnackBar(_snackBar);
-  }
+  // _showSnackBar(message) {
+  //   var _snackBar = SnackBar(
+  //     content: message,
+  //   );
+  //   _scaffoldKey.currentState.showSnackBar(_snackBar);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +87,8 @@ class _TodoScreenState extends State<TodoScreen> {
           TextField(
             controller: _todoDate,
             decoration: InputDecoration(
-              hintText: "YY-MM-DD",
-              labelText: "YY-MM-DD",
+              hintText: "YYYY-MM-DD",
+              labelText: "YYYY-MM-DD",
               prefixIcon: InkWell(
                   onTap: () {
                     _selectTodoDate(context);
@@ -106,20 +106,22 @@ class _TodoScreenState extends State<TodoScreen> {
           ),
           RaisedButton(
             onPressed: () async {
-              var todoObj = Todo();
-              todoObj.title = _todoTitle.text;
-              todoObj.description = _todoDescription.text;
-              todoObj.todoDate = _todoDate.text;
-              todoObj.category = _selectedValues.text;
-              todoObj.isFinished = 0;
 
-              var _todoService = TodoService();
-              var result = _todoService.insertTodo(todoObj);
-              print(result);
+                var todoObj = Todo ();
+                todoObj.title = _todoTitle.text;
+                todoObj.description = _todoDescription.text;
+                todoObj.todoDate = _todoDate.text;
+                todoObj.category = _selectedValues as String;
+                todoObj.isFinished = 0;
 
-              if(result > 0){
-                _showSnackBar(Text('Success'));
-              }
+                var _todoService = TodoService();
+                var result = _todoService.insertTodo(todoObj);
+                print(result);
+
+                //if(result > 0){
+                 // _showSnackBar(Text('Success'));
+                //}
+
 
             },
             child: Text("Save"),

@@ -12,7 +12,7 @@ class Todo {
     map['title'] = title;
     map['description'] = description;
     map['category'] = category;
-    map['todoDate'] = category;
+    map['todoDate'] = todoDate;
     map['isFinished'] = isFinished;
 
     return map;
